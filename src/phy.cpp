@@ -98,7 +98,7 @@ namespace PhyParser {
     std::vector<uint16_t> indices;
     indices.reserve(ledge.trianglesCount * 3);
 
-    uint16_t maxVertexIndex = 0;
+    unsigned int maxVertexIndex = 0;
     for (const auto& triangle : triangles) {
       const auto index1 = triangle.edges[0].startPointIndex;
       const auto index2 = triangle.edges[1].startPointIndex;
