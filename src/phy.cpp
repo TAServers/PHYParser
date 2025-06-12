@@ -103,9 +103,9 @@ namespace PhyParser {
 
     uint32_t maxVertexIndex = 0;
     for (const auto& triangle : triangles) {
-      const auto index1 = triangle.edges[0].startPointIndex;
-      const auto index2 = triangle.edges[1].startPointIndex;
-      const auto index3 = triangle.edges[2].startPointIndex;
+      const auto index1 = triangle.edges[0].getStartPointIndex();
+      const auto index2 = triangle.edges[1].getStartPointIndex();
+      const auto index3 = triangle.edges[2].getStartPointIndex();
 
       maxVertexIndex = std::max({maxVertexIndex, index1, index2, index3});
       indices.push_back(index1);
