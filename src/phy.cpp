@@ -1,6 +1,7 @@
 #include "phy.hpp"
 #include "helpers/offset-data-view.hpp"
 #include <algorithm>
+#include <ranges>
 #include <stack>
 
 namespace PhyParser {
@@ -99,28 +100,44 @@ namespace PhyParser {
     );
 
     std::vector<uint16_t> indices;
-    indices.reserve(ledge.trianglesCount * 3);
+    indices.reserve(static_cast<size_t>(ledge.trianglesCount) * 3);
+    std::map<uint16_t, uint16_t> remappedIndices;
 
     uint32_t maxVertexIndex = 0;
     for (const auto& triangle : triangles) {
-      const auto index1 = triangle.edges[0].getStartPointIndex();
-      const auto index2 = triangle.edges[1].getStartPointIndex();
-      const auto index3 = triangle.edges[2].getStartPointIndex();
-
-      maxVertexIndex = std::max({maxVertexIndex, index1, index2, index3});
-      indices.push_back(index1);
-      indices.push_back(index2);
-      indices.push_back(index3);
+      for (auto edgeIndex = 0; edgeIndex < 3; edgeIndex++) {
+        indices.push_back(remapIndex(triangle.edges[edgeIndex], remappedIndices, maxVertexIndex));
+      }
     }
 
-    auto vertices = data.parseStructArrayWithoutOffsets<Vector4>(
+    std::vector<Vector4> vertices;
+    vertices.reserve(remappedIndices.size());
+    const auto sharedVertexBuffer = data.parseStructArrayWithoutOffsets<Vector4>(
       ledge.pointOffset, maxVertexIndex + 1, "Failed to parse vertex array"
     );
+
+    for (const auto sourceIndex : remappedIndices | std::views::keys) {
+      vertices.push_back(sharedVertexBuffer[sourceIndex]);
+    }
 
     return {
       .vertices = std::move(vertices),
       .indices = std::move(indices),
       .boneIndex = ledge.boneIndex,
     };
+  }
+
+  uint16_t Phy::remapIndex(const Edge& edge, std::map<uint16_t, uint16_t>& remappedIndices, uint32_t& maxIndex) {
+    const auto index = edge.getStartPointIndex();
+    if (remappedIndices.contains(index)) {
+      return remappedIndices.at(index);
+    }
+
+    maxIndex = std::max(maxIndex, static_cast<uint32_t>(index));
+
+    const auto remappedIndex = remappedIndices.size();
+    remappedIndices.emplace(index, remappedIndex);
+
+    return remappedIndex;
   }
 }

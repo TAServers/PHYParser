@@ -49,14 +49,14 @@ namespace PhyParser {
     }
 
     template <typename T>
-    [[nodiscard]] std::vector<T> parseStructArrayWithoutOffsets(
+    [[nodiscard]] std::span<const T> parseStructArrayWithoutOffsets(
       const size_t relativeOffset, const size_t count, const char* errorMessage
     ) const {
       const auto absoluteOffset = offset + relativeOffset;
       checkBounds(absoluteOffset, sizeof(T) * count, data.size(), errorMessage);
 
       const T* first = reinterpret_cast<const T*>(&data[absoluteOffset]);
-      return std::vector<T>(first, first + count);
+      return std::span<const T>(first, count);
     }
 
     std::string parseString(const size_t relativeOffset, const char* errorMessage) const;

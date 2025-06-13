@@ -5,6 +5,7 @@
 #include "structs/phy.hpp"
 #include <memory>
 #include <optional>
+#include <set>
 #include <span>
 #include <vector>
 
@@ -40,5 +41,9 @@ namespace PhyParser {
     [[nodiscard]] static std::vector<Solid> parseMopp(const OffsetDataView& data);
 
     [[nodiscard]] static Solid parseLedge(const Structs::Ledge& ledge, const OffsetDataView& data);
+
+    [[nodiscard]] static uint16_t remapIndex(
+      const Structs::Edge& edge, std::map<uint16_t, uint16_t>& remappedIndices, uint32_t& maxIndex
+    );
   };
 }

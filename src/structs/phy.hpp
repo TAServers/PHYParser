@@ -82,7 +82,7 @@ namespace PhyParser::Structs {
     // uint32_t oppositePointIndex : 15;
     // uint32_t isVirtual : 1;
 
-    [[nodiscard]] uint32_t getStartPointIndex() const {
+    [[nodiscard]] uint16_t getStartPointIndex() const {
       return data & 0b1111111111111111u;
     }
   };
