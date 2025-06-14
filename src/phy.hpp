@@ -15,7 +15,7 @@ namespace PhyParser {
     struct Solid {
       std::vector<Structs::Vector4> vertices;
       std::vector<uint16_t> indices;
-      Structs::Vector3 centerOfMass;
+      Structs::Vector3 centreOfMass;
       int32_t boneIndex;
     };
 
@@ -41,7 +41,7 @@ namespace PhyParser {
     [[nodiscard]] static std::vector<Solid> parseMopp(const OffsetDataView& data);
 
     [[nodiscard]] static Solid parseLedge(
-      const Structs::Ledge& ledge, const Structs::Vector3& centerOfMass, const OffsetDataView& data
+      const Structs::Ledge& ledge, const Structs::Vector3& centreOfMass, const OffsetDataView& data
     );
 
     [[nodiscard]] static uint16_t remapIndex(
