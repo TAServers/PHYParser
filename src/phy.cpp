@@ -80,7 +80,7 @@ namespace PhyParser {
         const auto [ledge, ledgeOffset] =
           nodeData.parseStruct<Ledge>(nodeOffset + node.compactNodeOffset, "Failed to parse ledge");
 
-        solids.push_back(parseLedge(ledge, data.withOffset(ledgeOffset)));
+        solids.push_back(parseLedge(ledge, surfaceHeader.massCentre, data.withOffset(ledgeOffset)));
       } else {
         nodeOffsets.push(nodeOffset + node.rightNodeOffset);
         nodeOffsets.push(nodeOffset + sizeof(LedgeNode));
@@ -94,7 +94,7 @@ namespace PhyParser {
     throw std::runtime_error("Not implemented");
   }
 
-  Phy::Solid Phy::parseLedge(const Ledge& ledge, const OffsetDataView& data) {
+  Phy::Solid Phy::parseLedge(const Ledge& ledge, const Structs::Vector3& centerOfMass, const OffsetDataView& data) {
     const auto triangles = data.parseStructArrayWithoutOffsets<CompactTriangle>(
       sizeof(Ledge), ledge.trianglesCount, "Failed to parse triangle array"
     );
@@ -123,6 +123,7 @@ namespace PhyParser {
     return {
       .vertices = std::move(vertices),
       .indices = std::move(indices),
+      .centerOfMass = centerOfMass,
       .boneIndex = ledge.boneIndex,
     };
   }
