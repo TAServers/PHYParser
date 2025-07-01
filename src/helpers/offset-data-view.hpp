@@ -10,7 +10,7 @@ namespace PhyParser {
   public:
     template <typename T> using ValueOffsetPair = std::pair<T, size_t>;
 
-    explicit OffsetDataView(const std::span<std::byte>& data);
+    explicit OffsetDataView(std::span<const std::byte> data);
 
     explicit OffsetDataView(const OffsetDataView& from, const size_t newOffset);
 
@@ -62,7 +62,7 @@ namespace PhyParser {
     std::string parseString(const size_t relativeOffset, const char* errorMessage) const;
 
   private:
-    const std::span<std::byte> data;
+    const std::span<const std::byte> data;
     const size_t offset;
   };
 }

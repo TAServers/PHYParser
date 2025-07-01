@@ -9,7 +9,7 @@ namespace PhyParser {
   using namespace Enums;
   using namespace Structs;
 
-  Phy::Phy(const std::span<std::byte>& data, const std::optional<int64_t>& checksum) {
+  Phy::Phy(std::span<const std::byte> data, const std::optional<int64_t>& checksum) {
     const OffsetDataView dataView(data);
     header = dataView.parseStruct<Header>(0, "Failed to parse PHY header").first;
 

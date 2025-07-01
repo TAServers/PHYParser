@@ -1,7 +1,7 @@
 #include "offset-data-view.hpp"
 
 namespace PhyParser {
-  OffsetDataView::OffsetDataView(const std::span<std::byte>& data) : data(data), offset(0) {}
+  OffsetDataView::OffsetDataView(const std::span<const std::byte> data) : data(data), offset(0) {}
 
   OffsetDataView::OffsetDataView(const OffsetDataView& from, const size_t newOffset) :
     data(from.data), offset(newOffset) {}
@@ -14,7 +14,7 @@ namespace PhyParser {
     const auto absoluteOffset = offset + relativeOffset;
 
     for (size_t i = absoluteOffset; i < data.size(); i++) {
-      if (data[i] == std::byte(0)) {
+      if (data[i] == static_cast<std::byte>(0)) {
         return reinterpret_cast<const char*>(&data[absoluteOffset]);
       }
     }

@@ -19,7 +19,7 @@ namespace PhyParser {
       int32_t boneIndex;
     };
 
-    explicit Phy(const std::span<std::byte>& data, const std::optional<int64_t>& checksum = std::nullopt);
+    explicit Phy(std::span<const std::byte> data, const std::optional<int64_t>& checksum = std::nullopt);
 
     [[nodiscard]] int64_t getChecksum() const;
 
