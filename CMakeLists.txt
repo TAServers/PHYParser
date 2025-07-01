@@ -18,6 +18,8 @@ add_library(PHYParser
         src/structs/mopp.hpp
         src/helpers/text-section-parser.hpp
         src/helpers/text-section-parser.cpp
+        src/helpers/surface-parser.hpp
+        src/helpers/surface-parser.cpp
 )
 
 target_include_directories(
