@@ -5,4 +5,6 @@
  */
 namespace PhyParser {}
 
+#include "src/helpers/surface-parser.hpp"
+#include "src/helpers/text-section-parser.hpp"
 #include "src/phy.hpp"
