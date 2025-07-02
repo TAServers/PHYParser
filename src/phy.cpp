@@ -20,8 +20,7 @@ namespace PhyParser {
     auto [solids, solidDataSize] = parseSurfaces(data.subspan(header.size), header.solidCount);
     this->solids = std::move(solids);
 
-    const auto rawTextSection = dataView.parseString(header.size + solidDataSize, "Failed to parse text section");
-    textSection = parseTextSection(rawTextSection);
+    textSection = parseTextSection(data.subspan(header.size + solidDataSize));
   }
 
   int64_t Phy::getChecksum() const {

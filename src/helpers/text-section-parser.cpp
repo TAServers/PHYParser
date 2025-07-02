@@ -1,4 +1,5 @@
 #include "text-section-parser.hpp"
+#include "offset-data-view.hpp"
 #include <regex>
 #include <sstream>
 
@@ -43,10 +44,11 @@ namespace PhyParser {
     }
   }
 
-  TextSection parseTextSection(const std::string& raw) {
+  TextSection parseTextSection(const std::span<const std::byte> data) {
+    const auto dataAsString = OffsetDataView(data).parseString(0, "Text section overflowed the file");
     TextSection parsed{};
 
-    for (const auto& segment : preParseTextSection(raw)) {
+    for (const auto& segment : preParseTextSection(dataAsString)) {
       // TODO: Write something less awful than this
       if (segment.type == "ragdollconstraint") {
         TextSection::RagdollConstraint constraint{};

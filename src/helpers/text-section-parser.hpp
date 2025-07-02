@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <map>
+#include <span>
 #include <string>
 #include <vector>
 
@@ -61,5 +62,5 @@ namespace PhyParser {
     EditParams editParams;
   };
 
-  TextSection parseTextSection(const std::string& raw);
+  TextSection parseTextSection(std::span<const std::byte> data);
 }
