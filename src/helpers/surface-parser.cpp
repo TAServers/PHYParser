@@ -8,13 +8,13 @@ namespace PhyParser {
   namespace {
     using namespace Structs;
 
-    uint16_t remapIndex(const Edge& edge, std::map<uint16_t, uint16_t>& remappedIndices, uint32_t& maxIndex) {
+    uint16_t remapIndex(const Edge& edge, std::map<uint16_t, uint16_t>& remappedIndices, uint16_t& maxIndex) {
       const auto index = edge.getStartPointIndex();
       if (remappedIndices.contains(index)) {
         return remappedIndices.at(index);
       }
 
-      maxIndex = std::max(maxIndex, static_cast<uint32_t>(index));
+      maxIndex = std::max(maxIndex, index);
 
       const auto remappedIndex = remappedIndices.size();
       remappedIndices.emplace(index, remappedIndex);
@@ -31,7 +31,7 @@ namespace PhyParser {
       indices.reserve(static_cast<size_t>(ledge.trianglesCount) * 3);
       std::map<uint16_t, uint16_t> remappedIndices;
 
-      uint32_t maxVertexIndex = 0;
+      uint16_t maxVertexIndex = 0;
       for (const auto& triangle : triangles) {
         for (auto edgeIndex = 0; edgeIndex < 3; edgeIndex++) {
           indices.push_back(remapIndex(triangle.edges[edgeIndex], remappedIndices, maxVertexIndex));
@@ -39,13 +39,13 @@ namespace PhyParser {
       }
 
       std::vector<Vector4> vertices;
-      vertices.reserve(remappedIndices.size());
+      vertices.resize(remappedIndices.size());
       const auto sharedVertexBuffer = data.parseStructArrayWithoutOffsets<Vector4>(
         ledge.pointOffset, maxVertexIndex + 1, "Failed to parse vertex array"
       );
 
-      for (const auto sourceIndex : remappedIndices | std::views::keys) {
-        vertices.push_back(sharedVertexBuffer[sourceIndex]);
+      for (const auto [sourceIndex, destIndex] : remappedIndices) {
+        vertices[destIndex] = sharedVertexBuffer[sourceIndex];
       }
 
       return {
